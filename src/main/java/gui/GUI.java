@@ -86,9 +86,9 @@ public class GUI {
                     break;
                 default:
                     System.out.println("Veuillez entrer une valeur correcte!");
-                    System.out.println("---------------");
                     break;
             }
+            System.out.println("---------------");
         }
     }
 
