@@ -30,7 +30,7 @@ public class JsonProcess {
                 new Gson().toJson(baseFacts) +
                 "}";
 
-        File f = new File("./data.json");
+        File f = new File("data.json");
         FileWriter fw = new FileWriter(f);
         BufferedWriter bw = new BufferedWriter(fw);
         bw.write(json);

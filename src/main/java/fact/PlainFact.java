@@ -13,7 +13,7 @@ public class PlainFact implements Fact{
 
     @Override
     public Operator getOperator() {
-        return Operator.NONE;
+        return null;
     }
 
     @Override

@@ -66,17 +66,6 @@ public enum Operator {
         public boolean compareFactsValues(double value1, double value2) {
             return value1 <= value2;
         }
-    },
-    NONE{
-        @Override
-        public String getSymbol() {
-            return "";
-        }
-
-        @Override
-        public boolean compareFactsValues(double value1, double value2) {
-            return false;
-        }
     };
 
     public abstract String getSymbol();
