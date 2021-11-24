@@ -1,5 +1,5 @@
 {
-  "rules": [
+  "facts": [
     {
       "sentence": "Être slave"
     },
@@ -34,7 +34,7 @@
       "sentence": "Être accepté"
     }
   ],
-  "facts": [
+  "rules": [
     {
       "ruleFacts": [
         {
