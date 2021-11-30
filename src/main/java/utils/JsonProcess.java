@@ -39,6 +39,12 @@ public class JsonProcess {
 
     public static JSONArray importData(String key) throws IOException, ParseException {
         File f = new File("./data.json");
+        if(f.createNewFile()){
+            FileWriter fw = new FileWriter(f);
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write("{}");
+            bw.close();
+        }
         FileReader fr = new FileReader(f);
         BufferedReader br = new BufferedReader(fr);
         StringBuilder jsonString = new StringBuilder();
@@ -64,18 +70,20 @@ public class JsonProcess {
         JSONArray arr = importData("facts");
         List<Fact> facts = new ArrayList<>();
 
-        for(Object o: arr){
-            JSONObject obj = (JSONObject) o;
-            if(obj.get("operator") != null){
-                String sentence = (String) obj.get("sentence");
-                Optional<Operator> operator = Arrays  .stream(Operator.values())
-                        .filter(e -> e.toString().equals(obj.get("operator")))
-                        .findFirst();
-                double value = (double) obj.get("value");
+        if(arr != null) {
+            for (Object o : arr) {
+                JSONObject obj = (JSONObject) o;
+                if (obj.get("operator") != null) {
+                    String sentence = (String) obj.get("sentence");
+                    Optional<Operator> operator = Arrays.stream(Operator.values())
+                            .filter(e -> e.toString().equals(obj.get("operator")))
+                            .findFirst();
+                    double value = (double) obj.get("value");
 
-                operator.ifPresent(oper -> facts.add(new ValueFact(sentence, oper, value)));
-            } else {
-                facts.add(new PlainFact((String) obj.get("sentence")));
+                    operator.ifPresent(oper -> facts.add(new ValueFact(sentence, oper, value)));
+                } else {
+                    facts.add(new PlainFact((String) obj.get("sentence")));
+                }
             }
         }
         return facts;
@@ -84,31 +92,33 @@ public class JsonProcess {
     public static List<Rule> importRules(List<Fact> facts) throws IOException, ParseException {
         JSONArray arr = importData("rules");
         List<Rule> rules = new ArrayList<>();
+        if(arr != null) {
+            for (Object o : arr) {
+                JSONObject obj = (JSONObject) o;
 
-        for(Object o: arr){
-            JSONObject obj = (JSONObject) o;
+                JSONArray rulesArr = (JSONArray) obj.get("ruleFacts");
+                List<Fact> ruleFacts = new ArrayList<>();
+                getFacts(facts, rulesArr, ruleFacts);
 
-            JSONArray rulesArr = (JSONArray) obj.get("ruleFacts");
-            List<Fact> ruleFacts = new ArrayList<>();
-            getFacts(facts, rulesArr, ruleFacts);
+                JSONArray resultArr = (JSONArray) obj.get("resultFacts");
+                List<Fact> resultFacts = new ArrayList<>();
+                getFacts(facts, resultArr, resultFacts);
 
-            JSONArray resultArr = (JSONArray) obj.get("resultFacts");
-            List<Fact> resultFacts = new ArrayList<>();
-            getFacts(facts, resultArr, resultFacts);
-
-            rules.add(new Rule(ruleFacts, resultFacts));
+                rules.add(new Rule(ruleFacts, resultFacts));
+            }
         }
-
         return rules;
     }
 
     public static List<Fact> importBaseFacts(List<Fact> facts) throws IOException, ParseException {
         List<Fact> baseFacts = new ArrayList<>();
         JSONArray arr = importData("base_facts");
-        for(Object o : arr){
-            JSONObject obj = (JSONObject) o;
-            Optional<Fact> fact = facts.stream().filter(e -> e.getSentence().equals(obj.get("sentence"))).findFirst();
-            fact.ifPresent(baseFacts::add);
+        if(arr != null) {
+            for (Object o : arr) {
+                JSONObject obj = (JSONObject) o;
+                Optional<Fact> fact = facts.stream().filter(e -> e.getSentence().equals(obj.get("sentence"))).findFirst();
+                fact.ifPresent(baseFacts::add);
+            }
         }
         return baseFacts;
     }
