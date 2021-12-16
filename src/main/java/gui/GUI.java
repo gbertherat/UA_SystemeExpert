@@ -49,12 +49,14 @@ public class GUI {
                     output = scanner.next();
                     if(!output.equals("0") && pattern.matcher(output).matches()) {
                         int index = Integer.parseInt(output) - 1;
-                        if(index >= 0 && index < facts.size()) {
+                        if (index >= 0 && index < facts.size()) {
                             Map<String, List<List<Fact>>> bChaining = BackwardChaining.solve(rules, facts.get(index));
                             BackwardChaining.readOutput(bChaining);
                         } else {
                             System.out.println("Veuillez entrer une valeur correcte!");
                         }
+                    } else if(output.equals("0")){
+                        break;
                     } else {
                         System.out.println("Veuillez entrer une valeur correcte!");
                     }
